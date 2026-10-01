@@ -1,0 +1,23 @@
+W=1600 H=1600  checksum=454328600  tempo=1.878517 s
+
+--- perfilamento por trecho ---
+trecho                          tempo (s)        %
+alocacao do vetor                0.015498    0.82%
+lacos do Mandelbrot              1.878517   99.07%
+somatorio do checksum            0.002145    0.11%
+TOTAL                            1.896161  100.00%
+
+fracao paralelizavel estimada p = 0.991827
+speedup maximo por Amdahl (P->inf) = 122.35
+
+--- custo por faixa de linhas (evidencia de desbalanceamento) ---
+linhas     0-  159  iteracoes=      671344
+linhas   160-  319  iteracoes=     5631679
+linhas   320-  479  iteracoes=    33987192
+linhas   480-  639  iteracoes=    73793246
+linhas   640-  799  iteracoes=   112567023
+linhas   800-  959  iteracoes=   113025968
+linhas   960- 1119  iteracoes=    73973767
+linhas  1120- 1279  iteracoes=    34278457
+linhas  1280- 1439  iteracoes=     5726769
+linhas  1440- 1599  iteracoes=      673155

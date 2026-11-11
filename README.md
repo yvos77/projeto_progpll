@@ -19,7 +19,7 @@ mpi/mandelbrot_mpi.cpp     versão de memória distribuída
 scripts/medir.py           roda os experimentos e grava dados/medicoes.csv
 scripts/graficos.py        gera os gráficos em dados/graficos/
 dados/                     medições em CSV e gráficos gerados
-docs/                      documento do Marco 1
+docs/                      relatório do Marco 2 — análise experimental
 ```
 
 ## Requisitos
@@ -77,7 +77,9 @@ python3 scripts/graficos.py
 
 `medir.py` descarta a primeira execução (aquecimento), repete cada configuração
 três vezes, usa a mediana, grava `dados/medicoes.csv` e ao final confere se todos
-os checksums batem com o do baseline para o mesmo tamanho de entrada.
+os checksums batem com o do baseline para o mesmo tamanho de entrada. O cronômetro
+está dentro dos próprios programas em C++ (`clock_gettime`, `omp_get_wtime`,
+`MPI_Wtime`); o script apenas executa os binários e consolida o CSV.
 
 ## Validação de corretude
 
@@ -90,10 +92,26 @@ O baseline define o resultado correto. Checksums de referência:
 | 1600 × 1600 | 454328600 |
 | 2200 × 2200 | 858878868 |
 
-As versões OpenMP e MPI produzem esses mesmos valores para qualquer número de
-threads ou processos, qualquer política de escalonamento e qualquer decomposição.
+As **136 execuções** registradas em `dados/medicoes.csv` reproduzem esses valores
+para qualquer número de threads ou processos, qualquer política de escalonamento,
+qualquer mecanismo de redução e qualquer decomposição.
 
-## Máquina de referência das medições
+## Resultados principais
 
-Intel Core i5-11400F (6 núcleos físicos, 12 threads lógicas), Ubuntu sobre WSL2,
-`g++ -O2` e OpenMPI.
+Máquina de referência: Intel Core i5-11400F (6 núcleos físicos, 12 threads lógicas),
+Ubuntu sobre WSL2, `g++ -O2` e OpenMPI.
+
+| Métrica | Valor |
+|---|---|
+| Fração paralelizável medida (1600²) | 0,992634 |
+| Speedup máximo por Amdahl com 12 unidades | 11,10 |
+| Melhor speedup OpenMP (1600², 12 threads) | **10,40** |
+| Melhor speedup MPI (2200², 12 processos, cíclico) | **8,66** |
+| Pior política de escalonamento (`static,0`) | 4,34 |
+| Melhor política (`dynamic,1`) | 9,92 |
+| Desbalanceamento MPI em bloco, 4 processos | 93,71 % |
+| Desbalanceamento MPI cíclico, 4 processos | 0,78 % |
+
+A discussão completa — perfilamento, comparação de políticas, tratamento da condição
+de corrida, decomposição de domínio, escalabilidade forte e fraca e o afastamento em
+relação à Lei de Amdahl — está em `docs/Marco2_Analise_Experimental.pdf`.

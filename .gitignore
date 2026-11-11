@@ -1,3 +1,6 @@
+cat > .gitignore << 'FIM'
 bin/
 __pycache__/
 *.o
+03_mandelbrot
+FIM
